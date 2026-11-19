@@ -26,12 +26,20 @@
                         <x-input-error class="mt-2" :messages="$errors->get('nama_kendaraan')" />
                     </div>
 
-                    <!-- TAMBAHAN: Input Warna Kendaraan -->
+                    <!-- Input Warna Kendaraan -->
                     <div>
                         <x-input-label for="warna_kendaraan" :value="__('Warna Kendaraan (opsional)')" />
                         <x-text-input id="warna_kendaraan" name="warna_kendaraan" type="text" class="mt-1 block w-full"
                             :value="old('warna_kendaraan')" placeholder="Contoh: Merah, Hitam, Putih" />
                         <x-input-error class="mt-2" :messages="$errors->get('warna_kendaraan')" />
+                    </div>
+
+                    <!-- TAMBAHAN: Input Pemilik -->
+                    <div>
+                        <x-input-label for="pemilik" :value="__('Nama Pemilik (opsional)')" />
+                        <x-text-input id="pemilik" name="pemilik" type="text" class="mt-1 block w-full"
+                            :value="old('pemilik')" placeholder="Contoh: Budi, Umum" />
+                        <x-input-error class="mt-2" :messages="$errors->get('pemilik')" />
                     </div>
 
                     <div>

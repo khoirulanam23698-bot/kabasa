@@ -1,8 +1,17 @@
 <x-app-layout>
     <div class="max-w-6xl mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-1 text-gray-800">
-            {{ Auth::user()->isPetugas() ? 'Transaksi' : 'Semua Booking' }}
-        </h1>
+        <div class="flex justify-between items-center mb-1">
+            <h1 class="text-3xl font-bold text-gray-800">
+                {{ Auth::user()->isPetugas() ? 'Transaksi' : 'Semua Booking' }}
+            </h1>
+            
+            {{-- TOMBOL INPUT KENDARAAN MASUK (Hanya muncul untuk Petugas) --}}
+            @if(Auth::user()->isPetugas())
+                <a href="{{ route('petugas.transaksi.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl shadow transition text-sm">
+                    + Input Kendaraan Masuk
+                </a>
+            @endif
+        </div>
         <p class="text-gray-500 mb-6">Riwayat dan status booking dari semua pengguna</p>
 
         @if(session('success'))
@@ -27,7 +36,7 @@
                     @forelse($bookings as $b)
                     <tr class="border-b border-gray-50 last:border-0 hover:bg-gray-50">
                         <td class="p-4 text-gray-800">{{ $b->user->name }}</td>
-                        <td class="p-4 font-medium text-gray-800">{{ $b->slot->kode_slot }}</td>
+                        <td class="p-4 font-medium text-gray-800">{{ $b->slot->kode_slot ?? 'Area ' . ($b->parking_area_id ?? '-') }}</td>
                         <td class="p-4 text-gray-600">{{ $b->plat_kendaraan }}</td>
                         <td class="p-4">
                             <span @class([
@@ -55,7 +64,16 @@
                         </td>
                         <td class="p-4">
                             @if(Auth::user()->isPetugas())
-                                @if($b->payment && $b->payment->status === 'lunas')
+                                @if($b->status === 'aktif' && (!$b->payment || $b->payment->status !== 'lunas'))
+                                    {{-- TOMBOL PROSES KELUAR (Jika masih aktif) --}}
+                                    <form action="{{ route('petugas.transaksi.checkout', $b->id) }}" method="POST" class="inline" onsubmit="return confirm('Proses kendaraan keluar dan hitung biaya?')">
+                                        @csrf
+                                        <button type="submit" class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 transition">
+                                            Proses Keluar
+                                        </button>
+                                    </form>
+                                @elseif($b->payment && $b->payment->status === 'lunas')
+                                    {{-- TOMBOL CETAK STRUK (Jika sudah lunas) --}}
                                     @if($b->struk_dicetak_at)
                                         <span class="text-gray-400 text-xs">Sudah dicetak</span>
                                     @else
@@ -64,8 +82,6 @@
                                             Cetak Struk
                                         </a>
                                     @endif
-                                @else
-                                    <span class="text-gray-400 text-xs">Belum lunas</span>
                                 @endif
                             @elseif(Auth::user()->isAdmin())
                                 @if($b->struk_dicetak_at)

@@ -24,12 +24,14 @@ class VehicleController extends Controller
         $validated = $request->validate([
             'plat_nomor' => ['required', 'string', 'max:20'],
             'nama_kendaraan' => ['nullable', 'string', 'max:100'],
-            'warna_kendaraan' => ['nullable', 'string', 'max:50'], // <-- Tambah validasi warna
+            'warna_kendaraan' => ['nullable', 'string', 'max:50'],
+            'pemilik' => ['nullable', 'string', 'max:100'], // <-- TAMBAHAN VALIDASI PEMILIK
             'jenis_kendaraan' => ['required', 'in:Motor,Mobil'],
         ]);
 
         // Memetakan input form 'warna_kendaraan' ke kolom database 'color'
         $validated['color'] = $request->warna_kendaraan;
+        $validated['pemilik'] = $request->pemilik; // <-- TAMBAHAN SIMPAN PEMILIK
         $validated['user_id'] = auth()->id();
 
         Vehicle::create($validated);
@@ -51,12 +53,14 @@ class VehicleController extends Controller
         $validated = $request->validate([
             'plat_nomor' => ['required', 'string', 'max:20'],
             'nama_kendaraan' => ['nullable', 'string', 'max:100'],
-            'warna_kendaraan' => ['nullable', 'string', 'max:50'], // <-- Tambah validasi warna
+            'warna_kendaraan' => ['nullable', 'string', 'max:50'],
+            'pemilik' => ['nullable', 'string', 'max:100'], // <-- TAMBAHAN VALIDASI PEMILIK
             'jenis_kendaraan' => ['required', 'in:Motor,Mobil'],
         ]);
 
         // Memetakan input form 'warna_kendaraan' ke kolom database 'color'
         $validated['color'] = $request->warna_kendaraan;
+        $validated['pemilik'] = $request->pemilik; // <-- TAMBAHAN SIMPAN PEMILIK
 
         $vehicle->update($validated);
 

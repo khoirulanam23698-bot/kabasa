@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\Admin\ActivityLogController;
-use App\Http\Controllers\PetugasController; // <-- TAMBAHKAN INI
+use App\Http\Controllers\PetugasController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -77,6 +77,9 @@ Route::middleware(['auth', 'petugas'])->prefix('petugas')->group(function () {
     // TAMBAHAN ROUTE UNTUK INPUT KENDARAAN MASUK
     Route::get('/transaksi/create', [PetugasController::class, 'create'])->name('petugas.transaksi.create');
     Route::post('/transaksi', [PetugasController::class, 'store'])->name('petugas.transaksi.store');
+
+    // TAMBAHAN ROUTE UNTUK PROSES KELUAR (CHECKOUT)
+    Route::post('/transaksi/{booking}/checkout', [PetugasController::class, 'checkout'])->name('petugas.transaksi.checkout');
 });
 
 Route::middleware(['auth', 'owner'])->prefix('owner')->group(function () {
