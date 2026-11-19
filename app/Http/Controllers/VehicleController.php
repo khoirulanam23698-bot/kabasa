@@ -24,9 +24,12 @@ class VehicleController extends Controller
         $validated = $request->validate([
             'plat_nomor' => ['required', 'string', 'max:20'],
             'nama_kendaraan' => ['nullable', 'string', 'max:100'],
+            'warna_kendaraan' => ['nullable', 'string', 'max:50'], // <-- Tambah validasi warna
             'jenis_kendaraan' => ['required', 'in:Motor,Mobil'],
         ]);
 
+        // Memetakan input form 'warna_kendaraan' ke kolom database 'color'
+        $validated['color'] = $request->warna_kendaraan;
         $validated['user_id'] = auth()->id();
 
         Vehicle::create($validated);
@@ -48,8 +51,12 @@ class VehicleController extends Controller
         $validated = $request->validate([
             'plat_nomor' => ['required', 'string', 'max:20'],
             'nama_kendaraan' => ['nullable', 'string', 'max:100'],
+            'warna_kendaraan' => ['nullable', 'string', 'max:50'], // <-- Tambah validasi warna
             'jenis_kendaraan' => ['required', 'in:Motor,Mobil'],
         ]);
+
+        // Memetakan input form 'warna_kendaraan' ke kolom database 'color'
+        $validated['color'] = $request->warna_kendaraan;
 
         $vehicle->update($validated);
 

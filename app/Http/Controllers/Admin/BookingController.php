@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,21 @@ class BookingController extends Controller
     {
         $bookings = Booking::with('user', 'slot', 'payment')->latest()->get();
         return view('admin.bookings.index', compact('bookings'));
+    }
+
+    public function resetStruk(Booking $booking)
+    {
+        abort_unless(auth()->user()->isAdmin(), 403, 'Akses ditolak.');
+
+        $booking->update(['struk_dicetak_at' => null]);
+
+        ActivityLog::create([
+            'user' => auth()->user()->name,
+            'activity' => 'Reset Struk',
+            'details' => "Status cetak struk booking #{$booking->id} direset, struk bisa dicetak ulang",
+        ]);
+
+        return back()->with('success', 'Status cetak struk booking #' . $booking->id . ' berhasil direset.');
     }
 
     public function rekap(Request $request)

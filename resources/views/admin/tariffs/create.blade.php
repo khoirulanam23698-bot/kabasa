@@ -19,17 +19,16 @@
                     </div>
 
                     <div>
-                        <x-input-label for="tarif_awal" :value="__('Tarif Awal (Rp) - Jam Pertama')" />
-                        <x-text-input id="tarif_awal" name="tarif_awal" type="number" min="0" class="mt-1 block w-full" :value="old('tarif_awal')" placeholder="Contoh: 3000" required />
-                        <x-input-error class="mt-2" :messages="$errors->get('tarif_awal')" />
-                    </div>
+    <x-input-label for="tarif_awal" :value="__('Tarif Awal (Rp) - Per Hari')" />
+    <x-text-input id="tarif_awal" name="tarif_awal" type="number" min="0" class="mt-1 block w-full" required />
+    <x-input-error class="mt-2" :messages="$errors->get('tarif_awal')" />
+</div>
 
-                    <div>
-                        <x-input-label for="tarif_per_jam" :value="__('Tarif per Jam Berikutnya (Rp)')" />
-                        <x-text-input id="tarif_per_jam" name="tarif_per_jam" type="number" min="0" class="mt-1 block w-full" :value="old('tarif_per_jam')" placeholder="Contoh: 2000" required />
-                        <x-input-error class="mt-2" :messages="$errors->get('tarif_per_jam')" />
-                    </div>
-
+<div>
+    <x-input-label for="tarif_per_jam" :value="__('Tarif per Jam Setelah 24 Jam (Rp)')" />
+    <x-text-input id="tarif_per_jam" name="tarif_per_jam" type="number" min="0" class="mt-1 block w-full" required />
+    <x-input-error class="mt-2" :messages="$errors->get('tarif_per_jam')" />
+</div>
                     <div class="flex items-center gap-2">
                         <input type="checkbox" id="is_active" name="is_active" value="1" checked class="rounded border-slate-300 text-violet-600 focus:ring-violet-500">
                         <label for="is_active" class="text-sm text-slate-600">Aktifkan tarif ini</label>

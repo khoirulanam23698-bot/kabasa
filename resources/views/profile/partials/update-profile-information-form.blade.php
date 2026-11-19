@@ -1,4 +1,14 @@
 <section>
+    @php
+        $initial = strtoupper(mb_substr($user->name, 0, 1));
+        $fallback = 'data:image/svg+xml;utf8,' . rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" fill="#7c3aed"/><text x="50%" y="50%" dy=".35em" text-anchor="middle" font-family="Arial" font-size="44" font-weight="700" fill="#fff">' . e($initial) . '</text></svg>');
+        
+        // Cek apakah user punya foto, jika iya buat URL-nya
+        $photoUrl = $user->profile_photo_path 
+            ? asset('storage/' . $user->profile_photo_path) 
+            : $fallback;
+    @endphp
+
     <header class="mb-6">
         <h2 class="text-lg font-semibold text-slate-800">
             {{ __('Profile Information') }}
@@ -18,18 +28,23 @@
 
         <div class="flex items-center gap-6" x-data="{ preview: null }">
             <div class="relative">
+                <!-- Gambar Utama -->
                 <img
                     x-show="!preview"
-                    src="{{ $user->profilePhotoUrl() }}"
+                    src="{{ $photoUrl }}"
+                    onerror="this.onerror=null;this.src='{{ $fallback }}'"
                     class="w-24 h-24 rounded-full object-cover ring-4 ring-violet-100"
                     alt="Foto profil"
                 >
+                
+                <!-- Gambar Preview (Alpine.js) -->
                 <img
                     x-show="preview"
                     :src="preview"
                     class="w-24 h-24 rounded-full object-cover ring-4 ring-violet-100"
                     style="display: none;"
                 >
+                
                 <label for="photo" class="absolute bottom-0 right-0 bg-violet-600 hover:bg-violet-700 text-white rounded-full p-2 cursor-pointer shadow-md transition">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828H9V13z" />

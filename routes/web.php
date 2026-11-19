@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\Admin\ActivityLogController;
-
+use App\Http\Controllers\PetugasController; // <-- TAMBAHKAN INI
 
 Route::get('/', function () {
     return view('welcome');
@@ -55,14 +55,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/slots', [ParkingSlotController::class, 'index'])->name('admin.slots.index');
     Route::post('/slots', [ParkingSlotController::class, 'store'])->name('admin.slots.store');
     Route::delete('/slots/{slot}', [ParkingSlotController::class, 'destroy'])->name('admin.slots.destroy');
-  Route::get('/activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('admin.activity_logs');
+    Route::get('/activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('admin.activity_logs');
 
     Route::get('/bookings', [AdminBookingController::class, 'index'])->name('admin.bookings.index');
+    Route::post('/bookings/{booking}/reset-struk', [AdminBookingController::class, 'resetStruk'])->name('admin.bookings.reset-struk');
 
-    // Tambahan CRUD User
+   
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->except(['show'])->names('admin.users');
 
-    // Tambahan CRUD Area Parkir
     Route::resource('areas', \App\Http\Controllers\Admin\ParkingAreaController::class)->except(['show'])->names('admin.areas');
     Route::resource('tariffs', \App\Http\Controllers\Admin\ParkingTariffController::class)->except(['show'])->names('admin.tariffs');
 
@@ -70,8 +70,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 });
 
 Route::middleware(['auth', 'petugas'])->prefix('petugas')->group(function () {
+    // Route yang sudah ada
     Route::get('/transaksi', [AdminBookingController::class, 'index'])->name('petugas.transaksi.index');
     Route::get('/booking/{booking}/struk', [BookingController::class, 'cetakStruk'])->name('petugas.struk.cetak');
+    
+    // TAMBAHAN ROUTE UNTUK INPUT KENDARAAN MASUK
+    Route::get('/transaksi/create', [PetugasController::class, 'create'])->name('petugas.transaksi.create');
+    Route::post('/transaksi', [PetugasController::class, 'store'])->name('petugas.transaksi.store');
 });
 
 Route::middleware(['auth', 'owner'])->prefix('owner')->group(function () {

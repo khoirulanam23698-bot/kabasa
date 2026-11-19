@@ -31,26 +31,36 @@
                     <table class="w-full text-sm">
                         <thead>
                             <tr class="text-left text-slate-400 border-b border-slate-100">
-                                <th class="pb-3 font-medium">Nama</th>
-                                <th class="pb-3 font-medium">Email</th>
-                                <th class="pb-3 font-medium">Role</th>
-                                <th class="pb-3 font-medium text-right">Aksi</th>
+                                <th class="pb-3 px-4 font-medium">Nama</th>
+                                <th class="pb-3 px-4 font-medium">Email</th>
+                                <th class="pb-3 px-4 font-medium">Role</th>
+                                <th class="pb-3 px-4 font-medium text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($users as $user)
                                 <tr class="border-b border-slate-50">
-                                    <td class="py-3 flex items-center gap-3">
+                                  <td class="py-3 px-4">
+                                    <div class="flex items-center gap-3">
                                         <img src="{{ $user->profilePhotoUrl() }}" class="w-8 h-8 rounded-full object-cover" alt="">
                                         <span class="font-medium text-slate-700">{{ $user->name }}</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-slate-500">{{ $user->email }}</td>
+                                <td class="py-3 px-4">
+                                         @php
+                                            $roleStyles = [
+                                                'admin'   => 'bg-sky-500/20 text-sky-300 ring-sky-500/40',
+                                                'petugas' => 'bg-amber-500/20 text-amber-300 ring-amber-500/40',
+                                                'owner'   => 'bg-violet-500/20 text-violet-300 ring-violet-500/40',
+                                                'user'    => 'bg-slate-500/20 text-slate-300 ring-slate-500/40',
+                                            ];
+                                        @endphp
+                                         <span class="inline-flex items-center whitespace-nowrap px-3 py-1 rounded-full text-xs font-semibold ring-1 ring-inset {{ $roleStyles[$user->role] ?? $roleStyles['user'] }}">
+                                                {{ ucfirst($user->role) }}
+                                            </span>
                                     </td>
-                                    <td class="py-3 text-slate-500">{{ $user->email }}</td>
-                                    <td class="py-3">
-                                        <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $user->role === 'admin' ? 'bg-violet-100 text-violet-700' : 'bg-slate-100 text-slate-600' }}">
-                                            {{ ucfirst($user->role) }}
-                                        </span>
-                                    </td>
-                                    <td class="py-3 text-right space-x-2">
+                                    <td class="py-3 px-4 text-right space-x-2">
                                         <a href="{{ route('admin.users.edit', $user) }}" class="text-slate-500 hover:text-violet-600 text-sm font-medium">Edit</a>
                                         @if ($user->id !== auth()->id())
                                             <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus pengguna ini?')">

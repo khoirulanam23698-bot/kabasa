@@ -6,7 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Vehicle extends Model
 {
-    protected $fillable = ['user_id', 'plat_nomor', 'nama_kendaraan', 'jenis_kendaraan'];
+    // Tambahkan 'color' di sini agar diizinkan masuk ke database
+    protected $fillable = [
+        'user_id',
+        'plat_nomor',
+        'nama_kendaraan',
+        'color',
+        'jenis_kendaraan'
+    ];
 
     public function user()
     {

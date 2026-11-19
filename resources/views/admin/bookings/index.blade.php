@@ -5,6 +5,12 @@
         </h1>
         <p class="text-gray-500 mb-6">Riwayat dan status booking dari semua pengguna</p>
 
+        @if(session('success'))
+            <div class="bg-green-50 border border-green-200 text-green-700 p-3 rounded-lg mb-4 flex items-center gap-2">
+                <span>✅</span> {{ session('success') }}
+            </div>
+        @endif
+
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <table class="w-full">
                 <thead>
@@ -14,9 +20,7 @@
                         <th class="text-left p-4 text-sm font-semibold text-gray-600">Plat</th>
                         <th class="text-left p-4 text-sm font-semibold text-gray-600">Status</th>
                         <th class="text-left p-4 text-sm font-semibold text-gray-600">Pembayaran</th>
-                        @if(Auth::user()->isPetugas())
                         <th class="text-left p-4 text-sm font-semibold text-gray-600">Aksi</th>
-                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -49,22 +53,38 @@
                                 <span class="text-gray-400 text-xs">-</span>
                             @endif
                         </td>
-                        @if(Auth::user()->isPetugas())
                         <td class="p-4">
-                            @if($b->payment && $b->payment->status === 'lunas')
-                                <a href="{{ route('petugas.struk.cetak', $b->id) }}" target="_blank"
-                                    class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-violet-100 text-violet-700 hover:bg-violet-200 transition">
-                                    Cetak Struk
-                                </a>
-                            @else
-                                <span class="text-gray-400 text-xs">Belum lunas</span>
+                            @if(Auth::user()->isPetugas())
+                                @if($b->payment && $b->payment->status === 'lunas')
+                                    @if($b->struk_dicetak_at)
+                                        <span class="text-gray-400 text-xs">Sudah dicetak</span>
+                                    @else
+                                        <a href="{{ route('petugas.struk.cetak', $b->id) }}" target="_blank"
+                                            class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-violet-100 text-violet-700 hover:bg-violet-200 transition">
+                                            Cetak Struk
+                                        </a>
+                                    @endif
+                                @else
+                                    <span class="text-gray-400 text-xs">Belum lunas</span>
+                                @endif
+                            @elseif(Auth::user()->isAdmin())
+                                @if($b->struk_dicetak_at)
+                                    <form action="{{ url('/admin/bookings/' . $b->id . '/reset-struk') }}" method="POST"
+                                          onsubmit="return confirm('Reset status cetak struk booking #{{ $b->id }}? Struk akan bisa dicetak ulang.')">
+                                        @csrf
+                                        <button class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 hover:bg-red-200 transition">
+                                            Reset Struk
+                                        </button>
+                                    </form>
+                                @else
+                                    <span class="text-gray-400 text-xs">Belum dicetak</span>
+                                @endif
                             @endif
                         </td>
-                        @endif
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="{{ Auth::user()->isPetugas() ? 6 : 5 }}" class="p-8 text-center text-gray-400">Belum ada data booking.</td>
+                        <td colspan="6" class="p-8 text-center text-gray-400">Belum ada data booking.</td>
                     </tr>
                     @endforelse
                 </tbody>

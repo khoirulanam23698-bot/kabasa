@@ -8,12 +8,14 @@ class Booking extends Model
 {
     protected $fillable = [
         'user_id', 'parking_slot_id', 'plat_kendaraan',
-        'nama_kendaraan', 'waktu_masuk', 'waktu_keluar', 'status'
+        'nama_kendaraan', 'waktu_masuk', 'waktu_keluar', 'status',
+        'struk_dicetak_at',
     ];
 
     protected $casts = [
         'waktu_masuk' => 'datetime',
         'waktu_keluar' => 'datetime',
+        'struk_dicetak_at' => 'datetime',
     ];
 
     public function user()

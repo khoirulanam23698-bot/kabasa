@@ -4,124 +4,133 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Masuk - Kabasa</title>
- @vite(['resources/css/app.css', 'resources/js/app.js'])
+@vite(['resources/css/app.css', 'resources/js/app.js'])
 <style>
   @keyframes blob {
     0%, 100% { transform: translate(0px, 0px) scale(1); }
     33% { transform: translate(30px, -40px) scale(1.1); }
     66% { transform: translate(-20px, 20px) scale(0.9); }
   }
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-20px); }
   }
   body {
-    background: linear-gradient(-45deg, #6d28d9, #2563eb, #0ea5e9, #7c3aed);
-    background-size: 400% 400%;
-    animation: gradientShift 12s ease infinite;
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(37, 99, 235, 0.35), transparent 60%),
+      #07080c;
+    font-family: 'Figtree', system-ui, sans-serif;
   }
   .animate-blob { animation: blob 8s infinite ease-in-out; }
   .animate-blob-delay { animation: blob 8s infinite ease-in-out; animation-delay: 2s; }
-  .animate-blob-delay2 { animation: blob 8s infinite ease-in-out; animation-delay: 4s; }
   .animate-float { animation: float 5s ease-in-out infinite; }
-  .input-glow:focus { box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15); }
+  .input-glow:focus { box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2); }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-blob, .animate-blob-delay, .animate-float { animation: none; }
+  }
 </style>
 </head>
-<body class="min-h-screen relative overflow-x-hidden">
+<body class="min-h-screen relative overflow-x-hidden text-slate-100">
 
-    <!-- Blobs -->
-    <div class="fixed top-10 left-10 w-72 h-72 bg-pink-400/40 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-    <div class="fixed top-40 right-10 w-72 h-72 bg-yellow-300/40 rounded-full mix-blend-multiply filter blur-3xl animate-blob-delay"></div>
-    <div class="fixed bottom-10 left-1/3 w-72 h-72 bg-cyan-300/40 rounded-full mix-blend-multiply filter blur-3xl animate-blob-delay2"></div>
+    <!-- Cahaya biru di latar -->
+    <div class="fixed top-10 left-10 w-72 h-72 bg-sky-500/20 rounded-full filter blur-3xl animate-blob"></div>
+    <div class="fixed bottom-10 right-10 w-72 h-72 bg-blue-600/20 rounded-full filter blur-3xl animate-blob-delay"></div>
 
-    <!-- Floating icons -->
-    <div class="fixed top-1/4 left-[10%] text-4xl animate-float hidden md:block">🚗</div>
-    <div class="fixed bottom-1/4 right-[10%] text-4xl animate-float hidden md:block" style="animation-delay: 1.5s;">🅿️</div>
+    <!-- Ikon melayang -->
+    <div class="fixed top-1/4 left-[10%] text-4xl animate-float hidden md:block opacity-70">🚗</div>
+    <div class="fixed bottom-1/4 left-[25%] text-4xl animate-float hidden md:block opacity-70" style="animation-delay: 1.5s;">🅿️</div>
 
-    <div class="relative z-10 min-h-screen flex items-center justify-center px-6 py-12">
-        <div class="w-full max-w-md">
+    <div class="relative z-10 min-h-screen grid lg:grid-cols-2">
 
-            <!-- Logo / Brand -->
-            <div class="flex flex-col items-center mb-8">
-                <a href="/" class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-3xl font-extrabold text-white shadow-lg mb-3">
-                    P
-                </a>
-                <h1 class="text-2xl font-extrabold text-white drop-shadow text-center">Selamat Datang di <span class="bg-gradient-to-r from-yellow-300 via-pink-300 to-cyan-300 bg-clip-text text-transparent">Kabasa</span></h1>
-                <p class="text-white/80 text-sm mt-1">Masuk untuk lanjut booking parkir kamu</p>
-            </div>
+        <!-- KIRI: branding (hanya tampil di layar besar) -->
+        <div class="hidden lg:flex flex-col items-center justify-center px-12 text-center">
+            <a href="/" class="w-20 h-20 rounded-3xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-4xl font-extrabold text-white shadow-lg shadow-sky-500/30 mb-5">
+                P
+            </a>
+            <h1 class="text-4xl font-extrabold text-white">Selamat Datang di <span class="text-sky-400">Kabasa</span></h1>
+            <p class="text-slate-400 mt-3 max-w-sm">Masuk untuk lanjut booking parkir kamu</p>
+        </div>
 
-            <!-- Session Status -->
-            @if (session('status'))
-                <div class="mb-4 px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-medium">
-                    {{ session('status') }}
+        <!-- KANAN: panel kotak di belakang form -->
+        <div class="flex items-center justify-center px-6 py-12 lg:bg-[#0b0c11]/70 lg:backdrop-blur-xl lg:border-l lg:border-[#23252f]">
+            <div class="w-full max-w-md">
+
+                <!-- Brand versi HP (disembunyikan di layar besar) -->
+                <div class="flex flex-col items-center mb-8 lg:hidden">
+                    <a href="/" class="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-3xl font-extrabold text-white shadow-lg shadow-sky-500/30 mb-3">
+                        P
+                    </a>
+                    <h1 class="text-2xl font-extrabold text-white text-center">Selamat Datang di <span class="text-sky-400">Kabasa</span></h1>
+                    <p class="text-slate-400 text-sm mt-1">Masuk untuk lanjut booking parkir kamu</p>
                 </div>
-            @endif
 
-            <!-- Card -->
-            <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-10">
-
-                <form method="POST" action="{{ route('login') }}" class="space-y-5">
-                    @csrf
-
-                    <!-- Email Address -->
-                    <div>
-                        <label for="email" class="block text-sm font-semibold text-slate-700 mb-1.5">Email</label>
-                        <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
-                            class="input-glow w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-800 placeholder-slate-400 focus:border-violet-500 focus:outline-none transition"
-                            placeholder="nama@email.com">
-                        @error('email')
-                            <p class="mt-1.5 text-sm text-rose-500">{{ $message }}</p>
-                        @enderror
+                <!-- Session Status -->
+                @if (session('status'))
+                    <div class="mb-4 px-4 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm font-medium">
+                        {{ session('status') }}
                     </div>
+                @endif
 
-                    <!-- Password -->
-                    <div>
-                        <label for="password" class="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
-                        <input id="password" type="password" name="password" required autocomplete="current-password"
-                            class="input-glow w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-800 placeholder-slate-400 focus:border-violet-500 focus:outline-none transition"
-                            placeholder="••••••••">
-                        @error('password')
-                            <p class="mt-1.5 text-sm text-rose-500">{{ $message }}</p>
-                        @enderror
-                    </div>
+                <!-- Card -->
+                <div class="bg-[#11131a]/95 backdrop-blur-xl border border-[#23252f] rounded-3xl shadow-2xl shadow-blue-600/10 p-8 md:p-10">
 
-                    <!-- Remember Me + Forgot -->
-                    <div class="flex items-center justify-between">
-                        <label for="remember_me" class="flex items-center gap-2 select-none cursor-pointer">
-                            <input id="remember_me" type="checkbox" name="remember"
-                                class="rounded border-slate-300 text-violet-600 focus:ring-violet-500">
-                            <span class="text-sm text-slate-600">Ingat saya</span>
-                        </label>
+                    <form method="POST" action="{{ route('login') }}" class="space-y-5">
+                        @csrf
 
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-sm font-semibold text-violet-600 hover:text-violet-800 transition">
-                                Lupa password?
-                            </a>
+                        <!-- Email Address -->
+                        <div>
+                            <label for="email" class="block text-sm font-semibold text-slate-300 mb-1.5">Email</label>
+                            <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
+                                class="input-glow w-full rounded-xl border border-[#2a2a35] bg-[#0b0c11] px-4 py-3 text-slate-100 placeholder-slate-500 focus:border-sky-500 focus:outline-none transition"
+                                placeholder="nama@email.com">
+                            @error('email')
+                                <p class="mt-1.5 text-sm text-rose-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Password -->
+                        <div>
+                            <label for="password" class="block text-sm font-semibold text-slate-300 mb-1.5">Password</label>
+                            <input id="password" type="password" name="password" required autocomplete="current-password"
+                                class="input-glow w-full rounded-xl border border-[#2a2a35] bg-[#0b0c11] px-4 py-3 text-slate-100 placeholder-slate-500 focus:border-sky-500 focus:outline-none transition"
+                                placeholder="••••••••">
+                            @error('password')
+                                <p class="mt-1.5 text-sm text-rose-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Remember Me + Forgot -->
+                        <div class="flex items-center justify-between">
+                            <label for="remember_me" class="flex items-center gap-2 select-none cursor-pointer">
+                                <input id="remember_me" type="checkbox" name="remember"
+                                    class="rounded border-[#2a2a35] bg-[#0b0c11] text-sky-500 focus:ring-sky-500">
+                                <span class="text-sm text-slate-400">Ingat saya</span>
+                            </label>
+
+                            @if (Route::has('password.request'))
+                                <a href="{{ route('password.request') }}" class="text-sm font-semibold text-sky-400 hover:text-sky-300 transition">
+                                    Lupa password?
+                                </a>
+                            @endif
+                        </div>
+
+                        <!-- Submit -->
+                        <button type="submit"
+                            class="w-full py-3.5 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 text-white font-bold shadow-lg shadow-sky-500/30 hover:-translate-y-0.5 transition">
+                            Masuk
+                        </button>
+
+                        @if (Route::has('register'))
+                            <p class="text-center text-sm text-slate-400 pt-2">
+                                Belum punya akun?
+                                <a href="{{ route('register') }}" class="font-semibold text-sky-400 hover:text-sky-300 transition">Daftar sekarang</a>
+                            </p>
                         @endif
-                    </div>
+                    </form>
+                </div>
 
-                    <!-- Submit -->
-                    <button type="submit"
-                        class="w-full py-3.5 rounded-xl bg-gradient-to-r from-violet-600 to-blue-500 text-white font-bold shadow-lg hover:shadow-violet-300 hover:scale-[1.02] transition">
-                        Masuk
-                    </button>
-
-                    @if (Route::has('register'))
-                        <p class="text-center text-sm text-slate-500 pt-2">
-                            Belum punya akun?
-                            <a href="{{ route('register') }}" class="font-semibold text-violet-600 hover:text-violet-800 transition">Daftar sekarang</a>
-                        </p>
-                    @endif
-                </form>
+                <p class="text-center text-slate-500 text-xs mt-6">&copy; {{ date('Y') }} Kabasa. Semua hak dilindungi.</p>
             </div>
-
-            <p class="text-center text-white/70 text-xs mt-6">&copy; {{ date('Y') }} Kabasa. Semua hak dilindungi.</p>
         </div>
     </div>
 

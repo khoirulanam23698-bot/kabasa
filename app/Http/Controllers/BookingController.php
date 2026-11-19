@@ -6,7 +6,6 @@ use App\Models\Booking;
 use App\Models\ParkingSlot;
 use App\Models\Payment;
 use App\Models\ActivityLog;
-use App\Models\ParkingTariff;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
@@ -44,17 +43,10 @@ class BookingController extends Controller
 
         $slot->update(['status' => 'terisi']);
 
-        $tariff = ParkingTariff::where('jenis_kendaraan', $slot->jenis)
-            ->where('is_active', true)
-            ->first();
-
-        if (!$tariff) {
-            return back()->with('error', 'Tarif untuk jenis kendaraan ini belum diatur.');
-        }
-
+        $tarif = $slot->jenis === 'mobil' ? 5000 : 2000;
         Payment::create([
             'booking_id' => $booking->id,
-            'jumlah' => $tariff->tarif_awal,
+            'jumlah' => $tarif,
             'status' => 'pending',
         ]);
 
@@ -87,32 +79,19 @@ class BookingController extends Controller
 
     public function checkout(Booking $booking)
     {
-        $waktuKeluar = now();
-        $jam = max(1, ceil($booking->waktu_masuk->diffInMinutes($waktuKeluar) / 60));
-
-        $tariff = ParkingTariff::where('jenis_kendaraan', $booking->slot->jenis)
-            ->where('is_active', true)
-            ->first();
-
-        $totalBiaya = $tariff->tarif_awal;
-        if ($jam > 1) {
-            $totalBiaya += ($jam - 1) * $tariff->tarif_per_jam;
-        }
-
         $booking->update([
-            'waktu_keluar' => $waktuKeluar,
+            'waktu_keluar' => now(),
             'status' => 'selesai',
         ]);
         $booking->slot->update(['status' => 'tersedia']);
-        $booking->payment->update(['jumlah' => $totalBiaya]);
 
         ActivityLog::create([
             'user' => auth()->user()->name,
             'activity' => 'Checkout Booking',
-            'details' => "Booking #{$booking->id} selesai, {$jam} jam, total Rp" . number_format($totalBiaya),
+            'details' => "Booking #{$booking->id} selesai, slot {$booking->slot->kode_slot} tersedia kembali",
         ]);
 
-        return back()->with('success', 'Checkout berhasil. Total biaya: Rp' . number_format($totalBiaya));
+        return back()->with('success', 'Checkout berhasil, slot kembali tersedia.');
     }
 
     public function cetakStruk(Booking $booking)
@@ -121,6 +100,11 @@ class BookingController extends Controller
             abort(403, 'Akses ditolak.');
         }
 
+        if ($booking->struk_dicetak_at) {
+            abort(403, 'Struk booking #' . $booking->id . ' sudah pernah dicetak.');
+        }
+
+        $booking->update(['struk_dicetak_at' => now()]);
         $booking->load('slot', 'payment');
 
         return view('booking.struk', compact('booking'));

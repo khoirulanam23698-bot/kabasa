@@ -20,13 +20,13 @@
                     </div>
 
                     <div>
-                        <x-input-label for="tarif_awal" :value="__('Tarif Awal (Rp) - Jam Pertama')" />
+                        <x-input-label for="tarif_awal" :value="__('Tarif Awal (Rp) - per hari')" />
                         <x-text-input id="tarif_awal" name="tarif_awal" type="number" min="0" class="mt-1 block w-full" :value="old('tarif_awal', $tariff->tarif_awal)" required />
                         <x-input-error class="mt-2" :messages="$errors->get('tarif_awal')" />
                     </div>
 
                     <div>
-                        <x-input-label for="tarif_per_jam" :value="__('Tarif per Jam Berikutnya (Rp)')" />
+                        <x-input-label for="tarif_per_jam" :value="__('Tarif per Jam Setelah 24 Jam (Rp)')" />
                         <x-text-input id="tarif_per_jam" name="tarif_per_jam" type="number" min="0" class="mt-1 block w-full" :value="old('tarif_per_jam', $tariff->tarif_per_jam)" required />
                         <x-input-error class="mt-2" :messages="$errors->get('tarif_per_jam')" />
                     </div>

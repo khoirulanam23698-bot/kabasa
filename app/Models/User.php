@@ -21,9 +21,17 @@ public function bookings()
 }
 public function profilePhotoUrl(): string
 {
-    return $this->profile_photo_path
-        ? asset('storage/' . $this->profile_photo_path)
-        : 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=7F56D9&background=EBE9FE';
+    // Pakai foto yang diunggah, tapi hanya kalau file-nya benar-benar ada
+    if ($this->profile_photo_path
+        && \Illuminate\Support\Facades\Storage::disk('public')->exists($this->profile_photo_path)) {
+        return asset('storage/' . $this->profile_photo_path);
+    }
+
+    // Kalau tidak ada: lingkaran ungu dengan huruf inisial nama
+    $initial = strtoupper(mb_substr($this->name ?: '?', 0, 1));
+    $svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" fill="#7c3aed"/><text x="50%" y="50%" dy=".35em" text-anchor="middle" font-family="Arial" font-size="44" font-weight="700" fill="#fff">' . e($initial) . '</text></svg>';
+
+    return 'data:image/svg+xml;utf8,' . rawurlencode($svg);
 }
 
 
